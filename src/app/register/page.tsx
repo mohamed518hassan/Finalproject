@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef, useState, type FormEvent } from "react";
 import { signUp } from "@/api/auth";
+import { toast } from "react-toastify";
 import {
   Check,
   Eye,
@@ -31,7 +32,7 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // حالات الـ API والـ Loading
+  // تعريف المتغيرات التي كانت ناقصة
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const submittingRef = useRef(false);
@@ -48,7 +49,6 @@ export default function Register() {
     const rePassword = form.get("confirmPassword") as string;
     const phone = form.get("phone") as string;
 
-    // التحقق من تطابق كلمات المرور قبل إرسال الطلب
     if (password !== rePassword) {
       setErrorMessage(
         "Passwords do not match. Please check them and try again.",
@@ -62,6 +62,7 @@ export default function Register() {
 
       const result = await signUp({ name, email, password, rePassword, phone });
       if (result.ok && result.message === "success") {
+        toast.success("تم إنشاء الحساب بنجاح! أهلاً بك 🎉");
         router.push("/login");
       } else {
         setErrorMessage(

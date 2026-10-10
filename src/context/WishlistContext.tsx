@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "react-toastify";
 import {
   createContext,
   useCallback,
@@ -217,6 +218,10 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
         return { ok: false, error: "Unable to save the local wishlist" };
       }
       setMessage("Added to wishlist.");
+
+      // ✨ إشعار النجاح لإضافة المفضلة
+      toast.success("تمت إضافة المنتج إلى المفضلة بنجاح! ❤️");
+
       return { ok: true };
     } catch (requestError) {
       const errorMessage =
@@ -272,6 +277,10 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
         return { ok: false, error: "Unable to update the local wishlist" };
       }
       setMessage("Removed from wishlist.");
+
+      // ✨ إشعار الحذف من المفضلة
+      toast.info("تم إزالة المنتج من المفضلة 🗑️");
+
       return { ok: true };
     } catch (requestError) {
       const errorMessage =

@@ -1,5 +1,5 @@
 "use client";
-
+import { toast } from "react-toastify";
 import {
   createContext,
   useCallback,
@@ -195,7 +195,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
     const result = await getCart();
     if (result.ok) {
-      setCartId(result.cartId ?? result.data?.cartId ?? result.data?._id ?? null);
+      setCartId(
+        result.cartId ?? result.data?.cartId ?? result.data?._id ?? null,
+      );
       setItems(
         (result.data?.products ?? [])
           .map(mapApiItem)
@@ -258,6 +260,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
                 )
               : [...current, { ...product, quantity: 1 }],
           );
+
+          // إشعار النجاح للزوار
+          toast.success("تمت إضافة المنتج إلى السلة بنجاح! 🛒");
           return { ok: true };
         }
 
@@ -306,6 +311,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
             );
           }
         }
+
+        // إشعار النجاح للمستخدم المسجل
+        toast.success("تمت إضافة المنتج إلى السلة بنجاح! 🛒");
         return { ok: true };
       } finally {
         pendingAddOperations.current.delete(productId);
@@ -329,6 +337,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
           saveGuestCart(
             parseGuestCart().filter((item) => item.id !== productId),
           );
+          toast.error("تم إزالة المنتج من السلة 🗑️");
           return { ok: true };
         }
 
@@ -340,6 +349,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
           );
         }
         setItems((current) => current.filter((item) => item.id !== productId));
+        toast.error("تم إزالة المنتج من السلة 🗑️");
         return { ok: true };
       } finally {
         pendingCartOperations.current.delete(productId);
@@ -379,6 +389,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
               item.id === productId ? { ...item, quantity } : item,
             ),
           );
+          toast.success("تم تحديث كمية المنتج 🔄");
           return { ok: true };
         }
 
@@ -394,6 +405,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             item.id === productId ? { ...item, quantity } : item,
           ),
         );
+        toast.success("تم تحديث كمية المنتج 🔄");
         return { ok: true };
       } finally {
         pendingCartOperations.current.delete(productId);
@@ -404,7 +416,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
     },
     [handleApiFailure, isAuthenticated, parseGuestCart, saveGuestCart],
   );
-
   const syncGuestCart = useCallback(async (): Promise<CartOperationResult> => {
     const guestItems = parseGuestCart();
     const serverCartResult = await getCart();
@@ -491,9 +502,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem(GUEST_CART_SYNC_KEY);
     setCartId(null);
     setItems([]);
-    setError(
-      result.ok ? null : (result.error ?? "Unable to clear your cart."),
-    );
+    setError(result.ok ? null : (result.error ?? "Unable to clear your cart."));
     return result.ok
       ? { ok: true }
       : {

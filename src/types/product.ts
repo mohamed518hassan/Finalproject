@@ -13,13 +13,6 @@ export interface Subcategory {
   category: string;
 }
 
-export interface Brand {
-  _id: string;
-  name: string;
-  slug: string;
-  image: string;
-}
-
 export interface Product {
   _id: string;
   title: string;
@@ -27,7 +20,6 @@ export interface Product {
   priceAfterDiscount?: number;
   imageCover: string;
   ratingsAverage: number;
-  ratingsQuantity?: number;
   quantity?: number;
   category?: {
     _id?: string;
@@ -36,5 +28,4 @@ export interface Product {
     image?: string;
   };
   subcategory?: Subcategory[];
-  brand?: Brand;
 }

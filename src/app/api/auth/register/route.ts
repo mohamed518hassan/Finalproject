@@ -49,9 +49,9 @@ export async function POST(request: Request) {
 
     const message =
       typeof responseBody === "object" &&
-      responseBody !== null &&
-      "message" in responseBody &&
-      typeof responseBody.message === "string"
+        responseBody !== null &&
+        "message" in responseBody &&
+        typeof responseBody.message === "string"
         ? responseBody.message
         : undefined;
 

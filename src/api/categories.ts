@@ -2,7 +2,6 @@ import type { Category, Product, Subcategory } from "@/types/product";
 
 const API_BASE_URL = "https://ecommerce.routemisr.com/api/v1";
 const PAGE_SIZE = 40;
-const SUBCATEGORY_PAGE_SIZE = 50;
 
 interface ApiCollection<T> {
   data: T[];
@@ -40,24 +39,10 @@ export async function getCategoryDetails(categoryId: string): Promise<Category> 
 }
 
 export async function getCategorySubcategories(categoryId: string): Promise<Subcategory[]> {
-  const subcategories: Subcategory[] = [];
-  let currentPage = 1;
-  let numberOfPages = 1;
-
-  do {
-    const query = new URLSearchParams({
-      limit: String(SUBCATEGORY_PAGE_SIZE),
-      page: String(currentPage),
-    });
-    const result = await fetchCollection<Subcategory>(
-      `${API_BASE_URL}/categories/${encodeURIComponent(categoryId)}/subcategories?${query.toString()}`,
-    );
-    subcategories.push(...result.data);
-    numberOfPages = result.metadata.numberOfPages;
-    currentPage += 1;
-  } while (currentPage <= numberOfPages);
-
-  return subcategories.filter((subcategory) => subcategory.category === categoryId);
+  const result = await fetchCollection<Subcategory>(
+    `${API_BASE_URL}/categories/${encodeURIComponent(categoryId)}/subcategories`,
+  );
+  return result.data.filter((subcategory) => subcategory.category === categoryId);
 }
 
 export async function getCategoryProducts(categoryId: string): Promise<Product[]> {

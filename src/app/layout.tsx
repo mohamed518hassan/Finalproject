@@ -6,6 +6,8 @@ import Footer from "./_components/footer/page";
 import { CartProvider } from "@/context/CartContext";
 import { WishlistProvider } from "@/context/WishlistContext";
 import { AuthProvider } from "@/context/AuthContext";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const exo = Exo({
   variable: "--font-exo",
@@ -35,6 +37,11 @@ export default function RootLayout({
               <Navbar />
               <main>{children}</main>
               <Footer />
+                            <ToastContainer 
+                position="top-right" 
+                autoClose={3000} 
+                theme="colored" 
+              />
             </WishlistProvider>
           </CartProvider>
         </AuthProvider>
